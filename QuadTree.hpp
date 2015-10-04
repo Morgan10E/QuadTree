@@ -12,6 +12,7 @@ class QuadTree
 		// int getGreatestValue();
 		// int getLeastValue();
 		void printTree();
+    void addLiveCell(int x, int y);
 
 
 	private:
@@ -24,6 +25,7 @@ class QuadTree
       bool alive;
 		} Node;
 		Node* root;
-    Node* makeNewNode(int x, int y, int size, QuadTree::Node* parent);
+    Node* makeNewNode(int x, int y, int size, Node* parent);
     void printTreeRecurse(Node* node);
+    void addLiveCellRecurse(int x, int y, Node* node);
 };
