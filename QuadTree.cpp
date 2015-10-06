@@ -4,6 +4,12 @@ using namespace std;
 
 QuadTree::QuadTree() {
 	root = QuadTree::makeNewNode(-4, -4, 4, NULL);
+	bounds = 4;
+}
+
+QuadTree::QuadTree(int size) {
+	root = QuadTree::makeNewNode(-size, -size, size, NULL);
+	bounds = size;
 }
 
 QuadTree::Node* QuadTree::makeNewNode(int x, int y, int size, QuadTree::Node* parent){
@@ -21,10 +27,15 @@ void QuadTree::addLiveCell(int x, int y){
   QuadTree::addLiveCellRecurse(x, y, root);
 }
 
+bool QuadTree::isCell(int x, int y, Node* node) {
+	return node->size == 0 && node->x == x && node->y == y;
+}
+
 void QuadTree::addLiveCellRecurse(int x, int y, QuadTree::Node* node){
   cout << "LiveCellRecurse:(" << node->x << ", " << node->y << ") Size:" << node->size << endl;
-  if (node->size == 0 && node->x == x && node->y == y) {
-    node->alive = true;
+	node->alive = true;
+  if (QuadTree::isCell(x, y, node)) {
+    //node->alive = true;
     return;
   } else if (node->size == 0){
     cout<< "error inserting node" << endl;
@@ -66,4 +77,21 @@ void QuadTree::printTreeRecurse(Node* node){
       QuadTree::printTreeRecurse(node->children[i]);
     }
   }
+}
+
+void QuadTree::tick(){
+
+}
+
+bool QuadTree::isInBounds(int x, int y) {
+	return (x > -bounds && x < bounds - 1) && (y > -bounds && y < bounds - 1);
+}
+
+bool QuadTree::isAlive(int x, int y) {
+	return QuadTree::isAliveRecurse(x, y, root);
+}
+
+bool QuadTree::isAliveRecurse(int x, int y, Node* node) {
+	if (!node->alive) return false;
+	return true;
 }
