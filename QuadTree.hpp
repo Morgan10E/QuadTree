@@ -1,6 +1,8 @@
 #include <iostream>
 #include <stdlib.h>
 #include <string>
+#include <set>
+#include <utility>
 
 class QuadTree
 {
@@ -19,6 +21,7 @@ class QuadTree
 
 	private:
 		int bounds;
+
 		typedef struct Node{
 			Node* children[4];
 			Node* parent;
@@ -27,11 +30,18 @@ class QuadTree
       int size;
       bool alive;
 		} Node;
+
 		Node* root;
     Node* makeNewNode(int x, int y, int size, Node* parent);
+		void recurseFree(Node* node);
     void printTreeRecurse(Node* node);
     void addLiveCellRecurse(int x, int y, Node* node);
 		bool isInBounds(int x, int y);
 		bool isCell(int x, int y, Node* node);
+		int getIndex(int x, int y, Node* node);
+		void descend(Node* node, Node* newTree, std::set<std::pair<int, int> >& deadSet);
+		int countNeighbors(int x, int y, std::set<std::pair<int, int> >& deadSet);
 		bool isAliveRecurse(int x, int y, Node* node);
+
+
 };
