@@ -20,7 +20,7 @@ class QuadTree
 		bool isAlive(int x, int y);
 
 
-		int countNeighbors(int x, int y, std::set<std::pair<int, int> >& deadSet);
+		int countNeighbors(int x, int y, std::set<std::pair<int, int> >& deadSet, bool gather);
 
 	private:
 		int bounds;
@@ -42,9 +42,9 @@ class QuadTree
 		bool isInBounds(int x, int y);
 		bool isCell(int x, int y, Node* node);
 		int getIndex(int x, int y, Node* node);
-		void descend(Node* node, Node* newTree, std::set<std::pair<int, int> >& deadSet);
+		void descend(Node* node, std::set<std::pair<int, int> >& liveSet, std::set<std::pair<int, int> >& deadSet);
 		//int countNeighbors(int x, int y, std::set<std::pair<int, int> >& deadSet);
 		bool isAliveRecurse(int x, int y, Node* node);
-
-
+		void checkDead(std::set<std::pair<int, int> >& liveSet, std::set<std::pair<int, int> >& deadSet);
+		void addToNewTree(std::set<std::pair<int, int> >& liveSet);
 };

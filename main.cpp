@@ -23,12 +23,18 @@ int main(int argc, char *argv[])
 
   std::set<std::pair<int, int> > deadSet;
 
-  std::cout << tree->countNeighbors(1, -4, deadSet) << std::endl;
+  std::cout << tree->countNeighbors(1, -4, deadSet, true) << std::endl;
   for (std::set<std::pair<int, int> >::iterator it = deadSet.begin(); it != deadSet.end(); it++){
     std::cout << " " << (*it).first << "," << (*it).second;
   }
 
   std::cout << std::endl;
+
+  // tree->tick();
+  // tree->printTree();
+
+
+  free(tree);
 
 	return 0;
 }

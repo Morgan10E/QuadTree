@@ -98,20 +98,52 @@ void QuadTree::printTreeRecurse(Node* node){
 }
 
 void QuadTree::tick(){
+	cout << "Starting tick" << endl;
 	QuadTree::Node* newTree = QuadTree::makeNewNode(-bounds, -bounds, bounds, NULL);
 	set<pair<int, int> > deadSet;
-	QuadTree::descend(root, newTree, deadSet);
-
+	set<pair<int, int> > liveSet;
+	cout << "Descending" << endl;
+	QuadTree::descend(root, liveSet, deadSet);
+	cout << "Checking Dead" << endl;
+	QuadTree::checkDead(liveSet, deadSet);
+	QuadTree::recurseFree(root);
 	root = newTree;
+	QuadTree::addToNewTree(liveSet);
 }
 
-void QuadTree::descend(QuadTree::Node* node, QuadTree::Node* newTree, set<pair<int, int> >& deadSet) {
+void QuadTree::descend(QuadTree::Node* node, set<pair<int, int> >& liveSet, set<pair<int, int> >& deadSet) {
+	if (!node->alive) return;
 	if (node->size == 0) {
-
+		int numNeighbors = QuadTree::countNeighbors(node->x, node->y, deadSet, true);
+		if (numNeighbors == 2 || numNeighbors == 3) {
+			liveSet.insert(pair<int,int>(node->x, node->y));
+		}
+		return;
+	}
+	if (node->children[0]) {
+		for (int i = 0; i < 4; i++) {
+			QuadTree::descend(node->children[i], liveSet, deadSet);
+		}
 	}
 }
 
-int QuadTree::countNeighbors(int x, int y, set<pair<int, int> >& deadSet) {
+void QuadTree::checkDead(set<pair<int, int> >& liveSet, set<pair<int, int> >& deadSet) {
+	for (set<pair<int, int> >::iterator it = deadSet.begin(); it != deadSet.end(); it++){
+		cout << " " << (*it).first << "," << (*it).second;
+    int numNeighbors = QuadTree::countNeighbors((*it).first, (*it).second, deadSet, false);
+		if (numNeighbors == 3) {
+			liveSet.insert(*it);
+		}
+  }
+}
+
+void QuadTree::addToNewTree(set<pair<int, int> >& liveSet) {
+	for (set<pair<int, int> >::iterator it = liveSet.begin(); it != liveSet.end(); it++){
+    QuadTree::addLiveCell((*it).first, (*it).second);
+  }
+}
+
+int QuadTree::countNeighbors(int x, int y, set<pair<int, int> >& deadSet, bool gather) {
 	int count = 0;
 	for (int r = -1; r <= 1; r++) {
 		for (int c = -1; c <= 1; c++) {
@@ -119,7 +151,7 @@ int QuadTree::countNeighbors(int x, int y, set<pair<int, int> >& deadSet) {
 				if (QuadTree::isAlive(x + c, y + r)) {
 					count++;
 				} else {
-					deadSet.insert(pair<int,int>(x + c, y + r));
+					if (gather) deadSet.insert(pair<int,int>(x + c, y + r));
 				}
 			}
 		}
@@ -128,7 +160,7 @@ int QuadTree::countNeighbors(int x, int y, set<pair<int, int> >& deadSet) {
 }
 
 bool QuadTree::isInBounds(int x, int y) {
-	return (x > -bounds && x < bounds - 1) && (y > -bounds && y < bounds - 1);
+	return (x >= -bounds && x <= bounds - 1) && (y >= -bounds && y <= bounds - 1);
 }
 
 bool QuadTree::isAlive(int x, int y) {
