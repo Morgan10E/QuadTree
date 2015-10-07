@@ -4,7 +4,7 @@
 
 int main(int argc, char *argv[])
 {
-  QuadTree* tree = new QuadTree(8);
+  QuadTree* tree = new QuadTree(4);
   tree->printTree();
 
   std::cout << std::endl;
@@ -17,7 +17,18 @@ int main(int argc, char *argv[])
   tree->addLiveCell(2,2);
   tree->addLiveCell(-2,1);
   tree->addLiveCell(1,-4);
+  tree->addLiveCell(1,-3);
+  tree->addLiveCell(2,-4);
   tree->printTree();
+
+  std::set<std::pair<int, int> > deadSet;
+
+  std::cout << tree->countNeighbors(1, -4, deadSet) << std::endl;
+  for (std::set<std::pair<int, int> >::iterator it = deadSet.begin(); it != deadSet.end(); it++){
+    std::cout << " " << (*it).first << "," << (*it).second;
+  }
+
+  std::cout << std::endl;
 
 	return 0;
 }
