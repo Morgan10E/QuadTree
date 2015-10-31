@@ -19,6 +19,8 @@ int main(int argc, char *argv[])
   tree->addLiveCell(1,-4);
   tree->addLiveCell(1,-3);
   tree->addLiveCell(2,-4);
+  tree->addLiveCell(-2,0);
+  tree->addLiveCell(-2,2);
   tree->printTree();
 
   std::set<std::pair<int, int> > deadSet;
@@ -30,8 +32,20 @@ int main(int argc, char *argv[])
 
   std::cout << std::endl;
 
-  // tree->tick();
-  // tree->printTree();
+  tree->tick();
+  tree->printTree();
+
+  std::string input;
+  std::cout << "Input: ";
+  std::cin >> input;
+  while (input != "q") {
+    if (input == "t") {
+      tree->tick();
+      tree->printTree();
+    }
+    std::cout << "Input: ";
+    std::cin >> input;
+  }
 
 
   free(tree);
